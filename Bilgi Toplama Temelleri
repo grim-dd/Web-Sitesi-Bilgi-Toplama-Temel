@@ -1,0 +1,90 @@
+yougetsignal
+WHOis > Whois, bir web sitesi veya bir IP adresi hakkında önemli bilgileri toplamanıza olanak tanıyan bir sorgulama ve yanıt protokolüdür.
+
+ ICANN Whois, whois.com ve DomainTools (komut satırında whois <domain>)
+
+Web Sitesinde kullanılan teknolojiler >  BuiltWith, Wappalyzer, WhatRuns (komut satırında curl --head <domain>)
+
+internet arşivi > web.archive.org
+
+Google dorks > Google Hacking Database
+
+meta dosyalar > curl --get <domain>, curl --get <domain>/sitemap.xml, curl --get <domain>/.well-known/security.txt, <domain>/security.txt, curl --get <domain>/humans.txt
+
+DNS Enumeration > DNS Kaydı: Bir alan adının internet üzerindeki bir IP adresiyle ilişkilendirilmesini sağlayan bilgidir.
+Name Server: Alan adlarını IP adreslerine çeviren ve bu bilgileri barındıran sunuculardır.
+
+DNS Kayıt Türleri
+Kayıt Türü	Açıklama
+A	"Address" anlamına gelir ve bir domain isminin IPv4 adresine çevrilmesini sağlar.
+AAAA	Bir domain isminin IPv6 adresine çevrilmesini sağlar. Bu, "quad-A" olarak da bilinir.
+CNAME	"Canonical Name" kısaltmasıdır ve bir domain isminin başka bir domain ismine yönlendirilmesini sağlar.
+MX	"Mail Exchange" kısaltmasıdır ve e-posta mesajlarının hangi sunucuya yönlendirileceğini belirtir.
+NS	"Name Server" anlamına gelir ve domainin DNS kayıtlarının hangi DNS sunucusunda tutulduğunu gösterir.
+PTR	Ters DNS kaydıdır ve bir IP adresinin hangi domain ismine çözümlendiğini belirtir. Genellikle e-posta sunucularının spam kontrolü için kullanılır.
+SOA	"Start of Authority" anlamına gelir ve DNS bölgesinin temel bilgilerini içerir; örneğin, bölgenin hangi sunucu tarafından yönetildiği.
+SRV	"Service" kaydı, belirli bir hizmetin, protokolün ve domainin hangi port üzerinden ve hangi IP adresiyle erişilebileceğini belirtir.
+TXT	Genellikle SPF (Sender Policy Framework), DKIM (DomainKeys Identified Mail) gibi e-posta doğrulama mekanizmaları ve diğer metin tabanlı bilgiler için kullanılır.
+
+https://dnsdumpster.com/
+komut satırında > host <domain>, dig <domain>
+A,AAAA,MX,NS,SOA,CNAME kaydı sorguları > dig <option> <domain>
+PTR(Ters DNS Lookup) > dig -x <ip_adresi>
+nslookup
+
+theHarvester > theHarvester, açık kaynak istihbaratı (OSINT) toplama aracıdır. E-posta adresleri, alt alan isimleri, IP adresleri ve kişiler gibi hedeflerle ilgili bilgi toplamak için çeşitli kaynaklardan yararlanır.
+
+ theharvester --domain kali.org -b all
+
+Netcraft - Sitereport
+Netcraft Site Report, bir web sitesinin kullanılan teknolojileri, SSL sertifikası bilgileri, hosting sağlayıcısı ve diğer alanlarla ilgili detaylı bilgiler sunan bir çevrimiçi araçtır.
+
+Bağlantı: https://sitereport.netcraft.com/
+
+netcraft
+viewdns.info
+viewdns.info, DNS kayıtları, IP lokasyonu, ters DNS sorgulamaları, WHOIS sorgulamaları ve daha birçok DNS ile ilgili bilgiye ulaşılmasını sağlayan kapsamlı bir çevrimiçi DNS araçları koleksiyonudur.
+
+Bağlantı: https://viewdns.info/
+
+mxtoolbox.com
+mxtoolbox.com, MX kayıtları başta olmak üzere DNS sorgulamaları, blacklist kontrolü, SSL/TLS sertifika durumu sorgulamaları ve daha fazlasını yapabilen bir çevrimiçi araçtır.
+
+Bağlantı: https://mxtoolbox.com/SuperTool.aspx
+
+Subdomain Enumeration > gobuster dns -d <domain> -w /path/to/wordlist
+vhost mode > Vhost modu, aynı sunucu üzerinde farklı isimler altında barındırılan birden fazla web sitesini hedef alır. Birçok kuruluş, kaynakları verimli kullanmak adına tek bir sunucuda birden fazla siteyi sanal hostlar kullanarak barındırır. Gobuster'ın Vhost modu, bu sanal hostları keşfetmek için tasarlanmıştır ve potansiyel olarak gizli kalmış veya unutulmuş web sitelerini ortaya çıkarabilir.
+
+gobuster vhost -u <domain> -w /path/to/wordlist
+
+HTTP yanıt boyutunu filtrelemek yaygın kullanılan bir yöntemdir. Gobuster aracının HTTP yanıt boyutu filtrelemek için kullanabileceğimiz parametresi --exclude-length dir. Aşağıdaki komut, HTTP yanıtı 1542 bayttan farklı olan sonuçları getirir.
+
+gobuster vhost -u https://example.com -w /path/to/wordlist --exclude-length 1542
+
+Bu yöntem, özellikle bir web sunucusunun barındırdığı birden fazla sanal hostu keşfetmek istediğinizde yararlıdır. Vhost fuzzing, güvenlik araştırmacılarının ve sızma testçilerinin, geleneksel yöntemlerle bulunamayacak gizli hizmetleri ve uygulamaları ortaya çıkarmasına olanak tanır. Bu teknik, özellikle büyük ve karmaşık web altyapılarında, güvenlik açıklarını tespit etmek ve hedef sistemin saldırı yüzeyini anlamak için kritik öneme sahiptir.
+
+Dosya ve Dizin Tarama > gobuster dir -u <domain> -w /path/to/wordlist.txt
+
+Dosya/Sayfa Tarama
+
+Aşağıdaki komutla birlikte hedef sistem üzerinde bir dosya/sayfa taraması yapalım. Dosya/sayfa taraması yaparken -w parametresiyle wordlist, -u parametresiyle hedef, --extensions parametresiyle uzantı belirtiriz. Belirttiğimiz -v parametresi detaylı bir çıktı almak için kullanılmıştır.
+
+Aşağıdaki komutu kullanarak .php uzantılı dosyaları tespit edelim.
+
+gobuster dir -u <ip_adresi> -w /root/Desktop/misc/SecLists/Discovery/Web-Content/common.txt --extensions php -v
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
